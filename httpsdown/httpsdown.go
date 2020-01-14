@@ -7,7 +7,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 )
 
 const DEFAULTPORT int = 7788
@@ -23,7 +22,6 @@ func handelGetFile(w http.ResponseWriter, r *http.Request) {
 	log.Println("Recv:", r.RemoteAddr)
 	pwd, _ := os.Getwd()
 	des := pwd + string(os.PathSeparator) + r.URL.Path[1:len(r.URL.Path)]
-	fmt.Println(r.URL.Path[1:len(r.URL.Path)])
 	desStat, err := os.Stat(des)
 	if err != nil {
 		log.Println("File Not Exit", des)
@@ -60,7 +58,8 @@ func main() {
 	log.Printf("Listen On Port:%d pwd:%s\n", *port, pwd)
 
 	http.HandleFunc("/", handelGetFile)
-	err := http.ListenAndServe(":"+strconv.Itoa(*port), nil)
+	//err := http.ListenAndServe(":"+strconv.Itoa(*port), nil)
+	err := http.ListenAndServeTLS(":7788", "E:\\sourcecode\\go\\src\\learning_go\\httpsdown\\server.crt", "E:\\sourcecode\\go\\src\\learning_go\\httpsdown\\server.key", nil)
 	if nil != err {
 		log.Fatalln("Get Dir Err", err.Error())
 	}
